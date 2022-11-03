@@ -36,12 +36,12 @@ led = dio.DigitalInOut(board.LED)
 led.direction = dio.Direction.OUTPUT
 
 
-‘’’
+'''
 Function: fgreen
 Description: This function flashes the color green
 Parameters: None
 Return: None
-‘’’
+'''
 def fgreen():
     np.fill(green)
     np.show()
@@ -50,12 +50,12 @@ def fgreen():
     np.show()
 
 
-‘’’
+'''
 Function: fred
 Description: This function flashes the color red
 Parameters: None
 Return: None
-‘’’
+'''
 def fred():
     np.fill(red)
     np.show()
@@ -64,23 +64,23 @@ def fred():
     np.show()
 
 
-‘’’
+'''
 Function: blink
 Description: This function blinks 2 certain neopixels a certain color.
 Parameters: Color, num, num1, color is the color that will set the 2 neopixels, num and num1 are the two neopixels.
 Return: None
-‘’’
+'''
 def blink(num, num1, rgb):
     np[num] = rgb
     np[num1] = rgb
 
 
-‘’’
+'''
 Function: show
 Description: This function will take in a number between 1-4 and show a certain color. For instance 1 will show red, 2 will show green, 3 will show blue, and 4 will show yellow.
 Parameters: numcolor, this is the number that will be taken in and compared.
 Return: None
-‘’’
+'''
 def show(numcolor):
     if numcolor == 1:
         blink(0,1,red)
@@ -108,12 +108,12 @@ def show(numcolor):
         np.show()
 
 
-‘’’
+'''
 Function: nextround
 Description: This function generates a random number between 1 and 4 and append it into the num list. Then it will show the sequence of colors using the function show. Then it will go through and verify if what is touched on the board correlates to what is on the list, if it is correct, it will flash green and move on to the next round or it will flash red and end.
 Parameters: None
 Return: None
-‘’’
+'''
 def nextround():
     num = random.randint(1,4)
     gencolors.append(num)
