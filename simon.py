@@ -17,6 +17,7 @@ num = 0
 np = neopixel.NeoPixel(board.NEOPIXEL, 10, brightness=0.5, auto_write=False)
 
 
+pressed = False
 over = True
 gencolors = []
 
@@ -37,12 +38,12 @@ led.direction = dio.Direction.OUTPUT
 
 
 '''
-Function: fgreen
+Function: flash_green
 Description: This function flashes the color green
 Parameters: None
 Return: None
 '''
-def fgreen():
+def flash_green():
     np.fill(green)
     np.show()
     time.sleep(0.1)
@@ -51,12 +52,12 @@ def fgreen():
 
 
 '''
-Function: fred
+Function: flash_red
 Description: This function flashes the color red
 Parameters: None
 Return: None
 '''
-def fred():
+def flash_red():
     np.fill(red)
     np.show()
     time.sleep(0.1)
@@ -73,6 +74,11 @@ Return: None
 def blink(num, num1, rgb):
     np[num] = rgb
     np[num1] = rgb
+    np.show()
+    time.sleep(.5)
+    np[num] = black
+    np[num1] = black
+    np.show()
 
 
 '''
@@ -84,42 +90,36 @@ Return: None
 def show(numcolor):
     if numcolor == 1:
         blink(0,1,red)
-        np.show()
-        time.sleep(.5)
-        blink(0,1,black)
-        np.show()
     elif numcolor == 2:
         blink(3,4,green)
-        np.show()
-        time.sleep(.5)
-        blink(3,4,black)
-        np.show()
     elif numcolor == 3:
         blink(5,6,blue)
-        np.show()
-        time.sleep(.5)
-        blink(5,6,black)
-        np.show()
     elif numcolor == 4:
         blink(8,9,yellow)
-        np.show()
-        time.sleep(.5)
-        blink(8,9,black)
-        np.show()
 
 
 '''
-Function: nextround
-Description: This function generates a random number between 1 and 4 and append it into the num list. Then it will show the sequence of colors using the function show. Then it will go through and verify if what is touched on the board correlates to what is on the list, if it is correct, it will flash green and move on to the next round or it will flash red and end.
+Function: show_sequence
+Description: This function will generate a random number between 1 and 4 and append that number to a list called gencolors. It will then go through the list 
+and use the show function to show the colors.
 Parameters: None
 Return: None
 '''
-def nextround():
+def show_sequence():
     num = random.randint(1,4)
     gencolors.append(num)
     for i in range(len(gencolors)):
         show(gencolors[i])
-        time.sleep(1)
+        time.sleep(.5)
+
+
+'''
+Function: next_round
+Description: This function generates a random number between 1 and 4 and append it into the num list. Then it will show the sequence of colors using the function show. Then it will go through and verify if what is touched on the board correlates to what is on the list, if it is correct, it will flash green and move on to the next round or it will flash red and end.
+Parameters: None
+Return: None
+'''
+def next_round():
     for i in range(len(gencolors)):
         global over
         while (t1.value or t2.value or t3.value or t4.value) == False:
@@ -130,22 +130,38 @@ def nextround():
             show(gencolors[i])
         elif (t3.value and gencolors[i] == 3):
             show(gencolors[i])
-        elif (t4.value  and gencolors[i] == 4):
+        elif (t4.value and gencolors[i] == 4):
             show(gencolors[i])
         else:
             over = True
     time.sleep(.1)
 
 
-while True:
-    if abutton.value == True:
+'''
+Function: check_abutton
+Description: This function will check if the abutton has been pressed
+Parameters: None
+Return: pressed and over values
+'''
+def check_abutton():
+    global pressed
+    global over
+    if abutton.value == True and pressed == False:
+        pressed = True
         over = False
+        return pressed
+        return over
+    
+#Displays the loop of the game
+while True:
+    check_abutton()
     if over == False:
-        nextround()
-        if over!= True:
-            fgreen()
+        show_sequence()
+        next_round()
+        if over == False:
+            flash_green()
         else:
-            fred()
-        time.sleep(1)
-    if over == True:
-        gencolors = []
+            flash_red()
+            pressed = False
+            gencolors = []
+        time.sleep(.5)
