@@ -13,10 +13,11 @@ def fade_out(color, sec = 0.001):
     g_inc = color[1]/mx
     b_inc = color[2]/mx
     r, g, b = color
-    while r >= 0 and g >= 0 and b >= 0:
+    while r > 0 and g > 0 and b >= 0:
         r -= r_inc
         g -= g_inc
         b -= b_inc
+        print(r, g, b)
         rgb.fill((int(r), int(g), int(b)))
         rgb.show()
         time.sleep(sec)
@@ -40,6 +41,7 @@ def fade_in(color, sec = 0.001):
         rgb.fill((int(r), int(g), int(b)))
         rgb.show()
         time.sleep(sec)
+
 def stripes(space, color, colorsize, num_pixels):
     index = space
     once = False
@@ -62,9 +64,28 @@ def stripes(space, color, colorsize, num_pixels):
             time.sleep(.1)
         index += (colorsize + space)
         once = True
+        
+def get_rid(color, num_pixels, space, colorsize):
+    origspace = space
+    times = int(num_pixels / space)
+    for j in range(times):
+        if space <= colorsize:
+            if space > num_pixels-(space):
+                time.sleep(1)
+                break
+        else:
+            if space > num_pixels-(colorsize):
+                time.sleep(1)
+                break
+        for i in range(colorsize):
+            rgb[i+space] = color
+            rgb.show()
+            time.sleep(.1)
+        space+=origspace
+
 while True:
-    white = [255,255,255]
+    white = [40,200,255]
     fade_in(white)
     stripes(3,[255,0,0],3,30)
+    get_rid(white, 30, 3, 3)
     fade_out(white)
-    
